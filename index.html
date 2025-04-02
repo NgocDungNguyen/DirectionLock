@@ -67,23 +67,50 @@
             height: 100%;
             background-color: #1a0000;
             z-index: 1000;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+        .crime-scene-images {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            height: 100%;
         }
         .crime-scene-image {
-            width: 45%;
+            width: 90%;
+            max-width: 400px;
             height: auto;
             object-fit: cover;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, opacity 1s ease;
+            opacity: 0;
+        }
+        .crime-scene-image.visible {
+            opacity: 1;
         }
         .crime-scene-image.zoomed {
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            height: 90%;
-            object-fit: contain;
+            transform: translate(-50%, -50%) scale(1.5);
             z-index: 1001;
+        }
+        .blood-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1001;
+            background-image: url('path/to/blood-overlay.png');
+            background-size: cover;
+            opacity: 0.5;
+        }
+        #lockContainer {
+            transition: opacity 2s ease;
         }
     </style>
 </head>
@@ -113,7 +140,8 @@
     </div>
 
     <div id="crimeSceneContainer" class="crime-scene-container">
-        <div class="flex justify-around items-center h-full">
+        <div class="blood-overlay"></div>
+        <div class="crime-scene-images">
             <img id="crimeScene1" class="crime-scene-image" src="images (28).jpg" alt="Crime Scene 1">
             <img id="crimeScene2" class="crime-scene-image" src="899px-Crime_scene.jpg" alt="Crime Scene 2">
         </div>
@@ -128,6 +156,7 @@
             const joystickBase = document.getElementById('joystickBase');
             const joystickHandle = document.getElementById('joystickHandle');
             const resetButton = document.getElementById('resetButton');
+            const lockContainer = document.getElementById('lockContainer');
             const crimeSceneContainer = document.getElementById('crimeSceneContainer');
             const crimeScene1 = document.getElementById('crimeScene1');
             const crimeScene2 = document.getElementById('crimeScene2');
@@ -148,6 +177,7 @@
             let baseX = baseRect.left + baseRect.width / 2;
             let baseY = baseRect.top + baseRect.height / 2;
             let maxDistance = baseRect.width / 2 - joystickHandle.offsetWidth / 2;
+            let lockSoundPlaying = false;
             
             window.addEventListener('resize', updateJoystickDimensions);
             
@@ -175,8 +205,7 @@
                     }
                     
                     clearDirectionIndicators();
-                    lockSound.pause();
-                    lockSound.currentTime = 0;
+                    stopLockSound();
                 }
             }
             
@@ -268,16 +297,37 @@
             }
             
             function playLockSound() {
+                if (!lockSoundPlaying) {
+                    lockSoundPlaying = true;
+                    lockSound.currentTime = 0;
+                    lockSound.play().catch(e => console.log("Audio play failed:", e));
+                }
+            }
+            
+            function stopLockSound() {
+                lockSound.pause();
                 lockSound.currentTime = 0;
-                lockSound.play();
+                lockSoundPlaying = false;
             }
             
             function unlockLock() {
-                unlockSound.play();
+                unlockSound.play().catch(e => console.log("Audio play failed:", e));
+                lockContainer.style.opacity = '0';
                 setTimeout(() => {
+                    lockContainer.style.display = 'none';
                     crimeSceneContainer.style.display = 'block';
-                    backgroundMusic.play();
-                }, unlockSound.duration * 1000);
+                    setTimeout(() => {
+                        crimeSceneContainer.style.opacity = '1';
+                        backgroundMusic.volume = 0.5;
+                        backgroundMusic.play().catch(e => console.log("Audio play failed:", e));
+                        revealImages();
+                    }, 100);
+                }, 2000);
+            }
+            
+            function revealImages() {
+                setTimeout(() => crimeScene1.classList.add('visible'), 500);
+                setTimeout(() => crimeScene2.classList.add('visible'), 1000);
             }
             
             function toggleZoom(image) {
