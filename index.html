@@ -18,8 +18,8 @@
             font-family: 'Orbitron', sans-serif;
         }
         .joystick-base {
-            width: 180px;
-            height: 180px;
+            width: 240px;
+            height: 240px;
             border-radius: 50%;
             position: relative;
             background: rgba(0, 0, 0, 0.2);
@@ -27,8 +27,8 @@
             box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
         }
         .joystick-handle {
-            width: 70px;
-            height: 70px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             position: absolute;
             top: 50%;
@@ -44,87 +44,46 @@
         }
         .direction-indicator {
             position: absolute;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
             color: white;
-            font-size: 18px;
+            font-size: 24px;
         }
-        .direction-up { top: 5px; left: 50%; transform: translateX(-50%); }
-        .direction-down { bottom: 5px; left: 50%; transform: translateX(-50%); }
-        .direction-left { left: 5px; top: 50%; transform: translateY(-50%); }
-        .direction-right { right: 5px; top: 50%; transform: translateY(-50%); }
+        .direction-up { top: 10px; left: 50%; transform: translateX(-50%); }
+        .direction-down { bottom: 10px; left: 50%; transform: translateX(-50%); }
+        .direction-left { left: 10px; top: 50%; transform: translateY(-50%); }
+        .direction-right { right: 10px; top: 50%; transform: translateY(-50%); }
         .active-direction { background: rgba(59, 130, 246, 0.5); }
-        .lock-container { transition: all 0.5s ease; }
-        .lock-open {
-            transform: translateY(-20px);
-            opacity: 0;
-            pointer-events: none;
-        }
-        .success-container {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-            pointer-events: none;
-        }
-        .success-visible {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
     </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
-    <div class="w-full max-w-md mx-auto">
-        <div class="text-center mb-6">
-            <h1 class="orbitron text-3xl font-bold text-blue-500 mb-2">Direction Lock</h1>
-            <p class="text-gray-400">Enter the correct sequence to unlock</p>
+    <h1 class="orbitron text-4xl font-bold text-blue-500 mb-8">Direction Lock</h1>
+
+    <div id="lockContainer" class="flex flex-col items-center">
+        <div id="joystickBase" class="joystick-base mb-8">
+            <div class="direction-indicator direction-up" id="dirUp">
+                <i class="fas fa-chevron-up"></i>
+            </div>
+            <div class="direction-indicator direction-down" id="dirDown">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="direction-indicator direction-left" id="dirLeft">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="direction-indicator direction-right" id="dirRight">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+            <div id="joystickHandle" class="joystick-handle"></div>
         </div>
 
-        <div id="lockContainer" class="lock-container">
-            <div class="flex justify-center mb-10">
-                <div id="joystickBase" class="joystick-base">
-                    <div class="direction-indicator direction-up" id="dirUp">
-                        <i class="fas fa-chevron-up"></i>
-                    </div>
-                    <div class="direction-indicator direction-down" id="dirDown">
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="direction-indicator direction-left" id="dirLeft">
-                        <i class="fas fa-chevron-left"></i>
-                    </div>
-                    <div class="direction-indicator direction-right" id="dirRight">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                    <div id="joystickHandle" class="joystick-handle"></div>
-                </div>
-            </div>
-
-            <div class="flex justify-center">
-                <button id="resetButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full shadow-lg transition duration-300 flex items-center">
-                    <i class="fas fa-redo-alt mr-2"></i> Reset
-                </button>
-            </div>
-
-            <div class="mt-6 text-center text-gray-500 text-sm">
-                <p id="hintText">Move the joystick to enter the sequence</p>
-            </div>
-        </div>
-
-        <div id="successContainer" class="success-container text-center">
-            <div class="bg-green-600 rounded-lg p-6 shadow-lg">
-                <div class="text-5xl mb-4"><i class="fas fa-unlock-alt"></i></div>
-                <h2 class="orbitron text-2xl font-bold mb-2">Lock Opened!</h2>
-                <p class="mb-4">You've successfully entered the correct sequence.</p>
-                <button id="tryAgainButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full shadow-lg transition duration-300">
-                    Try Again
-                </button>
-            </div>
-        </div>
+        <button id="resetButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 flex items-center text-xl">
+            <i class="fas fa-redo-alt mr-2"></i> Reset
+        </button>
     </div>
 
     <script>
@@ -132,10 +91,6 @@
             const joystickBase = document.getElementById('joystickBase');
             const joystickHandle = document.getElementById('joystickHandle');
             const resetButton = document.getElementById('resetButton');
-            const tryAgainButton = document.getElementById('tryAgainButton');
-            const lockContainer = document.getElementById('lockContainer');
-            const successContainer = document.getElementById('successContainer');
-            const hintText = document.getElementById('hintText');
             
             const dirUp = document.getElementById('dirUp');
             const dirDown = document.getElementById('dirDown');
@@ -252,7 +207,8 @@
             
             function checkSequence() {
                 if (arraysEqual(currentSequence, correctSequence)) {
-                    showSuccess();
+                    alert('Lock opened successfully!');
+                    resetSequence();
                 }
             }
             
@@ -260,14 +216,8 @@
                 return arr1.length === arr2.length && arr1.every((value, index) => value === arr2[index]);
             }
             
-            function showSuccess() {
-                lockContainer.classList.add('lock-open');
-                successContainer.classList.add('success-visible');
-            }
-            
             function resetSequence() {
                 currentSequence = [];
-                hintText.textContent = "Move the joystick to enter the sequence";
             }
             
             joystickHandle.addEventListener('mousedown', startDrag);
@@ -280,12 +230,6 @@
             document.addEventListener('touchend', endDrag);
             
             resetButton.addEventListener('click', resetSequence);
-            
-            tryAgainButton.addEventListener('click', function() {
-                resetSequence();
-                lockContainer.classList.remove('lock-open');
-                successContainer.classList.remove('success-visible');
-            });
             
             joystickBase.addEventListener('touchmove', function(e) {
                 e.preventDefault();
