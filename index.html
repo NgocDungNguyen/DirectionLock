@@ -2,29 +2,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Direction Lock Challenge</title>
+    <title>Bloody Lock Challenge</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Creepster', cursive;
             touch-action: none;
             overscroll-behavior: none;
-        }
-        .orbitron {
-            font-family: 'Orbitron', sans-serif;
+            background-color: #1a0000;
+            color: #ff0000;
         }
         .joystick-base {
             width: 240px;
             height: 240px;
             border-radius: 50%;
             position: relative;
-            background: rgba(0, 0, 0, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            background: rgba(50, 0, 0, 0.5);
+            border: 2px solid #800000;
+            box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.5);
         }
         .joystick-handle {
             width: 90px;
@@ -34,13 +33,13 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: linear-gradient(145deg, #3b82f6, #1d4ed8);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(145deg, #800000, #4d0000);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
             cursor: pointer;
             transition: box-shadow 0.2s;
         }
         .joystick-handle:active {
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
         }
         .direction-indicator {
             position: absolute;
@@ -50,19 +49,46 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
+            background: rgba(100, 0, 0, 0.3);
+            color: #ff6666;
             font-size: 24px;
         }
         .direction-up { top: 10px; left: 50%; transform: translateX(-50%); }
         .direction-down { bottom: 10px; left: 50%; transform: translateX(-50%); }
         .direction-left { left: 10px; top: 50%; transform: translateY(-50%); }
         .direction-right { right: 10px; top: 50%; transform: translateY(-50%); }
-        .active-direction { background: rgba(59, 130, 246, 0.5); }
+        .active-direction { background: rgba(255, 0, 0, 0.5); }
+        .crime-scene-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1a0000;
+            z-index: 1000;
+        }
+        .crime-scene-image {
+            width: 45%;
+            height: auto;
+            object-fit: cover;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .crime-scene-image.zoomed {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 90%;
+            object-fit: contain;
+            z-index: 1001;
+        }
     </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
-    <h1 class="orbitron text-4xl font-bold text-blue-500 mb-8">Direction Lock</h1>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+    <h1 class="text-5xl font-bold mb-8 text-red-600 tracking-wider">D-Lock</h1>
 
     <div id="lockContainer" class="flex flex-col items-center">
         <div id="joystickBase" class="joystick-base mb-8">
@@ -81,16 +107,33 @@
             <div id="joystickHandle" class="joystick-handle"></div>
         </div>
 
-        <button id="resetButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 flex items-center text-xl">
-            <i class="fas fa-redo-alt mr-2"></i> Reset
+        <button id="resetButton" class="bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 flex items-center text-xl">
+            <i class="fas fa-skull-crossbones mr-2"></i> Reset
         </button>
     </div>
+
+    <div id="crimeSceneContainer" class="crime-scene-container">
+        <div class="flex justify-around items-center h-full">
+            <img id="crimeScene1" class="crime-scene-image" src="images (28).jpg" alt="Crime Scene 1">
+            <img id="crimeScene2" class="crime-scene-image" src="899px-Crime_scene.jpg" alt="Crime Scene 2">
+        </div>
+    </div>
+
+    <audio id="lockSound" src="LOCK TURNING CLICK SOUND EFFECT - FREE_2 (mp3cut.net).mp3"></audio>
+    <audio id="unlockSound" src="Wooden Treasure Chest Opening - Free Sound Effect (mp3cut.net).mp3"></audio>
+    <audio id="backgroundMusic" src="Horror Background Music For Films and Videos (Free Download) - It's Not Safe Here (mp3cut.net).mp3"></audio>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const joystickBase = document.getElementById('joystickBase');
             const joystickHandle = document.getElementById('joystickHandle');
             const resetButton = document.getElementById('resetButton');
+            const crimeSceneContainer = document.getElementById('crimeSceneContainer');
+            const crimeScene1 = document.getElementById('crimeScene1');
+            const crimeScene2 = document.getElementById('crimeScene2');
+            const lockSound = document.getElementById('lockSound');
+            const unlockSound = document.getElementById('unlockSound');
+            const backgroundMusic = document.getElementById('backgroundMusic');
             
             const dirUp = document.getElementById('dirUp');
             const dirDown = document.getElementById('dirDown');
@@ -106,12 +149,14 @@
             let baseY = baseRect.top + baseRect.height / 2;
             let maxDistance = baseRect.width / 2 - joystickHandle.offsetWidth / 2;
             
-            window.addEventListener('resize', function() {
+            window.addEventListener('resize', updateJoystickDimensions);
+            
+            function updateJoystickDimensions() {
                 baseRect = joystickBase.getBoundingClientRect();
                 baseX = baseRect.left + baseRect.width / 2;
                 baseY = baseRect.top + baseRect.height / 2;
                 maxDistance = baseRect.width / 2 - joystickHandle.offsetWidth / 2;
-            });
+            }
             
             function startDrag(e) {
                 isDragging = true;
@@ -130,6 +175,8 @@
                     }
                     
                     clearDirectionIndicators();
+                    lockSound.pause();
+                    lockSound.currentTime = 0;
                 }
             }
             
@@ -158,6 +205,7 @@
                 joystickHandle.style.transform = `translate(calc(-50% + ${deltaX}px), calc(-50% + ${deltaY}px))`;
                 
                 determineDirection(deltaX, deltaY);
+                playLockSound();
             }
             
             function determineDirection(deltaX, deltaY) {
@@ -207,8 +255,7 @@
             
             function checkSequence() {
                 if (arraysEqual(currentSequence, correctSequence)) {
-                    alert('Lock opened successfully!');
-                    resetSequence();
+                    unlockLock();
                 }
             }
             
@@ -218,6 +265,23 @@
             
             function resetSequence() {
                 currentSequence = [];
+            }
+            
+            function playLockSound() {
+                lockSound.currentTime = 0;
+                lockSound.play();
+            }
+            
+            function unlockLock() {
+                unlockSound.play();
+                setTimeout(() => {
+                    crimeSceneContainer.style.display = 'block';
+                    backgroundMusic.play();
+                }, unlockSound.duration * 1000);
+            }
+            
+            function toggleZoom(image) {
+                image.classList.toggle('zoomed');
             }
             
             joystickHandle.addEventListener('mousedown', startDrag);
@@ -234,6 +298,9 @@
             joystickBase.addEventListener('touchmove', function(e) {
                 e.preventDefault();
             }, { passive: false });
+            
+            crimeScene1.addEventListener('click', () => toggleZoom(crimeScene1));
+            crimeScene2.addEventListener('click', () => toggleZoom(crimeScene2));
         });
     </script>
 </body>
