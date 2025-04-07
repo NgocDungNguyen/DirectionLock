@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -310,6 +311,210 @@
             98% { opacity: 0; }
             100% { opacity: 0.5; }
         }
+
+        /* ENHANCED glitch effects for broken screen/TV appearance */
+        @keyframes glitch-horizontal {
+            0% { transform: translate(0); }
+            30% { transform: translate(-12px, 0); }
+            31% { transform: translate(8px, 0); }
+            32% { transform: translate(-15px, 0); }
+            33% { transform: translate(15px, 0); }
+            34% { transform: translate(-8px, 0); }
+            35% { transform: translate(0); }
+            65% { transform: translate(0); }
+            66% { transform: translate(15px, 0); }
+            67% { transform: translate(-12px, 0); }
+            68% { transform: translate(10px, 0); }
+            69% { transform: translate(-15px, 0); }
+            70% { transform: translate(0); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes glitch-vertical {
+            0% { transform: translateY(0); }
+            25% { transform: translateY(8px); }
+            26% { transform: translateY(-15px); }
+            27% { transform: translateY(12px); }
+            28% { transform: translateY(0); }
+            75% { transform: translateY(0); }
+            76% { transform: translateY(-10px); }
+            77% { transform: translateY(15px); }
+            78% { transform: translateY(-8px); }
+            79% { transform: translateY(0); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes noise {
+            0%, 3%, 5%, 42%, 44%, 63%, 65%, 100% { opacity: 0; }
+            4%, 43%, 64% { opacity: 0.8; } /* Increased opacity */
+        }
+
+        @keyframes scanlines {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 30px; }
+        }
+
+        @keyframes color-shift {
+            0%, 40%, 60%, 100% { filter: hue-rotate(0deg) brightness(1); }
+            15%, 45% { filter: hue-rotate(45deg) brightness(1.2); }
+            25%, 55% { filter: hue-rotate(-60deg) brightness(0.8); }
+            35%, 65% { filter: hue-rotate(30deg) brightness(1.1); }
+        }
+
+        .glitch-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 9500;
+            display: none;
+        }
+
+        .glitch-container.active {
+            display: block;
+        }
+
+        .glitch-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* Enhanced horizontal glitch */
+        .glitch-horizontal {
+            animation: glitch-horizontal 1.5s infinite steps(1);
+        }
+
+        /* Enhanced vertical glitch */
+        .glitch-vertical {
+            animation: glitch-vertical 1.2s infinite steps(1);
+        }
+
+        /* Enhanced noise */
+        .glitch-noise {
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAABJpJREFUaEPVmVtS3DAMhqXjHaHX6AV6jR6B3qJH6DVyBHqNXiAdry3PJGMrsiRblsczGZhkk9jW/0uyZTvm7e3tY9jgZ7fb2f9+1263HqTbIIR+Ro3jOAbvx/+lL8rjsnm/LA0WrSX9UkAAwO/L5XKYQ0gASZnvoWkhpW8uCxAAeMzEqwCCgBwOh3AY7Pf7MEwOkNe5IGZB8HKLGCdhOmAa5NLB2ECujU0C4mEwg0o31wLiYTALpgkEYex5nDy0dn8ZEA0GL2sBOUQtMG0g3MWt2FnLxpZAWr6/GAgHwvMsXSdtoNI8y9WLgPgivpGLI33PwVizHbUCeE0gHAim4twtCrC1gEi+ooFgWdICpeZ+ECu8phRfljwPB6KBI8BKIGYMQA9aAGqAaH6Shm9Jmx0JhIbkkuN78YYZmHTn9x1APDg56BTv1AFiQGngtGV31xb4uXTdGkS5uN81EAz+E/+31OBktD1AymnjvBbmnlqJGhBafNGGOYelQMRT9Pu3ApFch3qDgeCcB4SeR6OpVs88GAjWGrQhHfJMAwJ+llVtDSBSRLRuFF+XfMB8pH+WArEkHkaDBMIL46muszQQLVwlF9FAWKTzRUqKQVKvpYDUJCk14SeBaEMpl0u+A8i9/1vqCYm/+kPpA9ud1YFo+UN8+EJAIM94Fw8dKVJSXWLM1YHEnqAfpnyi/PL8ZW6UShFOedZQIMYwPn2PfAJvqIlayx+ojYb6CA8RCnG/WutI0z8EiOGbTt+jG8rLNG+R57I23ArEr+chYoe8O0S01jRAwE+kSbunxUwZtcNAtLeX+UQq3Ddm5GnH6vUIvbebhnsGAGJdZ8jhSCSldts8+IqJk24oPBCNQRqedwMpNfM1QKxI8XyvziB0q9ysYUmn2NKlSiJao0/UTC/+oSvFqIBTRagGCOU61wqnwUFDYNSZPN/QbpkEw7sOT5CcmCiBeHM0GqeAoJ2ts+XiXrIZnTKnFgO5O0S0G3lnQhlSEpwdBwPJdYhavUIFmoQ0illt+bu6j2iOLnkq9xUJBDFVekSzDQcC1wi0dKP7CBe4KKScLzXbnDa+gehGQaClkud8bSwRLXFj7psEUnK2zXkkdwYDkteipU1asAS1M0hxbgzvCUOA5FwlpWNqFJ7i9gARnY1zWimU5pYEUs32lhBk7skBkUDwZ9YxtjqZdxcNU544YZC7uxZKc4TD8DxF+VJnzHWcpYCUbECdnzsdDbyg2PkPzuoHAIFpnJ9Qw1igmifwQXoE0JAQb0D46ySltLcwEPARadYAQbB04UALt3QZWgsGgdCuAQRVbdPGvDGNnr/UeBhmcQWRA8/dS7je85jsWlO1VjKodNMeIKCgwZT7EKfYN/dlH2JpSAONNqXh7oH4ERJ/a2DY4vOaQHIbbgbxmkDwi18ntRaXfu+tddij1k7GnHB7gXilGx7SFSZm7SlApGw8AgidKVBV/EvJHQKkhKx0zagCoXeV2sP/TyDUpyx4+tfkhyia7g5KXDj5eaaW7p8OpGSDE3WDbKaAUAf8aOXQnPmjFd/5Ftf8Aep+QNcXAb8TAAAAAElFTkSuQmCC');
+            opacity: 0;
+            animation: noise 2.5s linear infinite; /* Faster noise */
+        }
+
+        /* TV scanlines effect */
+        .glitch-scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0.05) 50%,
+                rgba(0, 0, 0, 0.15) 50%
+            );
+            background-size: 100% 4px;
+            animation: scanlines 0.5s linear infinite;
+            pointer-events: none;
+            z-index: 9501;
+            opacity: 0.5;
+            display: none;
+        }
+
+        .glitch-scanlines.active {
+            display: block;
+        }
+
+        /* Enhanced RGB split with more vibrant colors */
+        .glitch-rgb-split {
+            mix-blend-mode: screen;
+            animation: color-shift 3s infinite alternate;
+        }
+
+        .glitch-rgb-split::before, 
+        .glitch-rgb-split::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            mix-blend-mode: screen;
+        }
+
+        .glitch-rgb-split::before {
+            transform: translateX(10px); /* Increased offset */
+            background: rgba(0, 255, 0, 0.4); /* Brighter color */
+        }
+
+        .glitch-rgb-split::after {
+            transform: translateX(-10px); /* Increased offset */
+            background: rgba(0, 0, 255, 0.4); /* Brighter color */
+        }
+
+        /* More intense screen flicker */
+        .screen-flicker {
+            animation: flicker 0.1s infinite alternate; /* Faster flicker */
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            33% { opacity: 0.7; }
+            66% { opacity: 0.3; }
+        }
+
+        /* More intense shake */
+        .shake {
+            animation: shake 0.08s 5; /* More shakes, faster */
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        /* Broken screen cracks effect */
+        .glitch-cracks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAwIDEwMDAiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjMpIiBzdHJva2Utd2lkdGg9IjIiIGQ9Ik01MDAgNTAwIEw0MDAgNDAwIEwzMDAgMjAwIE0yMDAgMzAwIEwxMDAgMjAwIE01MDAgNTAwIEw2MDAgNDAwIEw4MDAgMzAwIE01MDAgNTAwIEw0NTAgNjUwIEw0MDAgODAwIE01MDAgNTAwIEw1NTAgNjUwIEw2MDAgODAwIiAvPjwvc3ZnPg==');
+            background-size: cover;
+            opacity: 0;
+            display: none;
+            pointer-events: none;
+        }
+
+        .glitch-cracks.active {
+            display: block;
+            opacity: 0.7;
+        }
+
+        /* Additional strong glitch that occurs occasionally */
+        .extreme-glitch {
+            animation: extreme-glitch 0.3s;
+        }
+
+        @keyframes extreme-glitch {
+            0% { transform: translate(0) scale(1) skew(0); filter: brightness(1); }
+            10% { transform: translate(-30px, 10px) scale(1.05, 0.9) skew(5deg, 0deg); filter: brightness(1.5); }
+            20% { transform: translate(30px, -15px) scale(0.95, 1.1) skew(-10deg, 2deg); filter: brightness(0.7); }
+            30% { transform: translate(-20px, 5px) scale(1.1, 0.9) skew(0deg, -5deg); filter: brightness(1.2); }
+            40% { transform: translate(15px, -10px) scale(0.95, 1.05) skew(-3deg, 1deg); filter: brightness(0.9); }
+            50% { transform: translate(-10px, 15px) scale(1.05, 0.95) skew(5deg, -2deg); filter: brightness(1.3); }
+            60% { transform: translate(20px, 0px) scale(0.9, 1.1) skew(0deg, 5deg); filter: brightness(0.8); }
+            70% { transform: translate(-15px, -5px) scale(1.05, 1) skew(-5deg, 0deg); filter: brightness(1.2); }
+            80% { transform: translate(10px, 10px) scale(1, 0.95) skew(2deg, -3deg); filter: brightness(0.75); }
+            90% { transform: translate(-5px, -15px) scale(0.95, 1.05) skew(-1deg, 5deg); filter: brightness(1.1); }
+            100% { transform: translate(0) scale(1) skew(0); filter: brightness(1); }
+        }
+
         #lockContainer {
             transition: opacity 2s ease;
             padding: 40px;
@@ -346,6 +551,22 @@
         }
         .pulling {
             animation: stringPull 0.4s ease-in-out forwards;
+        }
+        .screen-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 0, 0, 0.2);
+            z-index: 9000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.1s ease-out;
+        }
+        .screen-flash.active {
+            opacity: 1;
+            transition: opacity 0.05s ease-in;
         }
     </style>
 </head>
@@ -388,13 +609,30 @@
         </div>
     </div>
 
+    <div id="screenFlash" class="screen-flash"></div>
     <div id="debugInfo" class="debug-info"></div>
 
+    <!-- Enhanced glitch effects container with new elements -->
+    <div id="glitchContainer" class="glitch-container">
+        <div class="glitch-layer glitch-horizontal"></div>
+        <div class="glitch-layer glitch-vertical"></div>
+        <div class="glitch-layer glitch-noise"></div>
+        <div class="glitch-layer glitch-rgb-split"></div>
+        <div class="glitch-layer glitch-scanlines" id="glitchScanlines"></div>
+        <div class="glitch-layer glitch-cracks" id="glitchCracks"></div>
+    </div>
+
+    <!-- Audio files -->
     <audio id="lockSound" src="LOCK TURNING CLICK SOUND EFFECT - FREE_2 (mp3cut.net).mp3"></audio>
     <audio id="unlockSound" src="Wooden Treasure Chest Opening - Free Sound Effect (mp3cut.net).mp3"></audio>
     <audio id="backgroundMusic" src="Creepy Wind - Sound Effect [Perfect Cut].mp3"></audio>
     <audio id="lightClickSound" src="Light Switch.mp3"></audio>
     <audio id="lightPullSound" src="Flickering.mp3"></audio>
+    
+    <!-- New sound effects for failed attempts (volume set to 50%) -->
+    <audio id="attempt5Sound" src="Wind.mp3"></audio>
+    <audio id="attempt10Sound" src="Radio.mp3"></audio>
+    <audio id="attempt20Sound" src="Horror Background Music For Films and Videos (Free Download) - It's Not Safe Here (mp3cut.net).mp3"></audio>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -412,23 +650,68 @@
             const digit4 = document.getElementById('digit4');
             const digits = [digit1, digit2, digit3, digit4];
             const debugInfo = document.getElementById('debugInfo');
+            const screenFlash = document.getElementById('screenFlash');
+            const glitchContainer = document.getElementById('glitchContainer');
+            const glitchScanlines = document.getElementById('glitchScanlines');
+            const glitchCracks = document.getElementById('glitchCracks');
             
+            // Audio elements
             const lockSound = document.getElementById('lockSound');
             const unlockSound = document.getElementById('unlockSound');
             const backgroundMusic = document.getElementById('backgroundMusic');
             const lightClickSound = document.getElementById('lightClickSound');
             const lightPullSound = document.getElementById('lightPullSound');
             
+            // New audio elements for failed attempts
+            const attempt5Sound = document.getElementById('attempt5Sound');
+            const attempt10Sound = document.getElementById('attempt10Sound');
+            const attempt20Sound = document.getElementById('attempt20Sound');
+            
+            // Set volume to 50% for attempt sounds
+            attempt5Sound.volume = 0.5;
+            attempt10Sound.volume = 0.5;
+            attempt20Sound.volume = 0.5;
+            
             const dirUp = document.getElementById('dirUp');
             const dirDown = document.getElementById('dirDown');
             const dirLeft = document.getElementById('dirLeft');
             const dirRight = document.getElementById('dirRight');
+
+            // Track user interaction to fix audio autoplay issues
+            let hasUserInteracted = false;
+
+            // Track attempts
+            let totalAttempts = 0;
+            let movementCounter = 0;
+            let lastAttemptSoundPlayed = 0; // Track which attempt sound was last played
             
-            // Configure debug mode
-            const debugMode = false; // Set to true to enable debugging
+            // Glitch effect variables
+            let glitchEnabled = false;
+            let glitchInterval = null;
+            let radioLoopTimeout = null;
+            let radioPlaying = false;
+            let extremeGlitchTimeout = null;
+            
+            // Configure debug mode - Can be toggled with Ctrl+D
+            const debugMode = false; // Initial value
             if (debugMode) {
                 debugInfo.style.display = 'block';
             }
+            
+            // Mark when user interacts with the page (for audio autoplay)
+            function markUserInteraction() {
+                hasUserInteracted = true;
+                // Remove event listeners once interaction is detected
+                document.removeEventListener('click', markUserInteraction);
+                document.removeEventListener('touchstart', markUserInteraction);
+                document.removeEventListener('keydown', markUserInteraction);
+                console.log("User interaction detected - audio can now play");
+            }
+
+            // Add event listeners to detect user interaction
+            document.addEventListener('click', markUserInteraction);
+            document.addEventListener('touchstart', markUserInteraction);
+            document.addEventListener('keydown', markUserInteraction);
             
             // CHANGED: Modified sequence to Down, Left, Up, Right
             const correctSequence = ['DOWN', 'LEFT', 'UP', 'RIGHT'];
@@ -456,6 +739,19 @@
                 }
             }
             
+            // Add keyboard shortcut to toggle debug mode
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+D to toggle debug mode
+                if (e.ctrlKey && e.key === 'd') {
+                    debugInfo.style.display = debugInfo.style.display === 'none' ? 'block' : 'none';
+                    console.log(`Debug mode: ${debugInfo.style.display === 'block' ? 'ON' : 'OFF'}`);
+                    console.log(`Current attempt count: ${totalAttempts}`);
+                    console.log(`Current sequence: [${currentSequence.join(', ')}]`);
+                    console.log(`Correct sequence: [${correctSequence.join(', ')}]`);
+                    e.preventDefault();
+                }
+            });
+            
             window.addEventListener('resize', updateJoystickDimensions);
             
             // Added immediate recalculation after a short delay
@@ -472,6 +768,7 @@
                 isDragging = true;
                 updateJoystickDimensions(); // Update dimensions when interaction starts
                 moveJoystick(e);
+                markUserInteraction(); // Mark user interaction
                 e.preventDefault();
             }
             
@@ -562,15 +859,212 @@
                 joystickHandle.style.transform = 'translate(-50%, -50%)';
             }
             
+            // Enhanced function to show occasional extreme glitches
+            function triggerExtremeGlitch() {
+                // Only 30% chance of extreme glitch
+                if (Math.random() > 0.7) {
+                    document.body.classList.add('extreme-glitch');
+                    
+                    // Show cracks or scanlines at random
+                    if (Math.random() > 0.5) {
+                        glitchCracks.style.opacity = (Math.random() * 0.5 + 0.2).toString();
+                        glitchCracks.classList.add('active');
+                        setTimeout(() => {
+                            glitchCracks.classList.remove('active');
+                        }, 800);
+                    }
+                    
+                    flashScreen(`rgba(${Math.random() > 0.5 ? '0, 255, 255' : '255, 0, 255'}, 0.3)`);
+                    
+                    setTimeout(() => {
+                        document.body.classList.remove('extreme-glitch');
+                    }, 300);
+                }
+            }
+            
+            // Enhanced function to start the glitching effects
+            function startGlitchEffect() {
+                if (glitchEnabled) return; // Already active
+                
+                console.log("Starting enhanced glitch effects");
+                glitchEnabled = true;
+                glitchContainer.classList.add('active');
+                glitchScanlines.classList.add('active');
+                
+                // Start random glitch effects with more frequent and intense glitches
+                glitchInterval = setInterval(() => {
+                    // Random intensity glitch
+                    const intensity = Math.random();
+                    
+                    if (intensity > 0.85) {
+                        // Major glitch - screen shake + heavy visual artifacts
+                        document.body.classList.add('shake');
+                        
+                        // Flicker the screen
+                        lockContainer.classList.add('screen-flicker');
+                        setTimeout(() => {
+                            document.body.classList.remove('shake');
+                            lockContainer.classList.remove('screen-flicker');
+                        }, 200);
+                        
+                        // Occasional screen cracks
+                        if (Math.random() > 0.7) {
+                            glitchCracks.style.opacity = (Math.random() * 0.3 + 0.2).toString();
+                            glitchCracks.classList.add('active');
+                            setTimeout(() => {
+                                glitchCracks.classList.remove('active');
+                            }, 1000 + Math.random() * 2000);
+                        }
+                    } 
+                    else if (intensity > 0.6) {
+                        // Medium glitch - RGB split intensifies
+                        const rgbSplit = document.querySelector('.glitch-rgb-split');
+                        rgbSplit.style.opacity = '0.8';
+                        setTimeout(() => rgbSplit.style.opacity = '', 400);
+                    }
+                    
+                    // Random flash
+                    if (Math.random() > 0.7) {
+                        flashScreen(`rgba(${Math.random() > 0.5 ? '0, 255, 255' : '255, 0, 255'}, 0.2)`);
+                    }
+                }, 1500 + Math.random() * 3000); // More frequent random intervals (1.5-4.5s)
+                
+                // Schedule occasional extreme glitches
+                extremeGlitchTimeout = setInterval(triggerExtremeGlitch, 5000 + Math.random() * 15000);
+                
+                // Start the radio sound looping
+                if (hasUserInteracted) {
+                    startRadioLoop();
+                }
+            }
+
+            // Function to stop the glitching effects
+            function stopGlitchEffect() {
+                if (!glitchEnabled) return;
+                
+                console.log("Stopping glitch effects");
+                glitchEnabled = false;
+                glitchContainer.classList.remove('active');
+                glitchScanlines.classList.remove('active');
+                glitchCracks.classList.remove('active');
+                
+                if (glitchInterval) {
+                    clearInterval(glitchInterval);
+                    glitchInterval = null;
+                }
+                
+                if (extremeGlitchTimeout) {
+                    clearInterval(extremeGlitchTimeout);
+                    extremeGlitchTimeout = null;
+                }
+                
+                stopRadioLoop();
+            }
+
+            // Function to start radio sound looping
+            function startRadioLoop() {
+                if (radioPlaying || !hasUserInteracted) return;
+                
+                radioPlaying = true;
+                
+                function playRadioSound() {
+                    if (!hasUserInteracted) return;
+                    
+                    attempt10Sound.currentTime = 0;
+                    attempt10Sound.play()
+                        .then(() => {
+                            // Schedule next play with a small gap
+                            const duration = attempt10Sound.duration;
+                            if (glitchEnabled) {
+                                radioLoopTimeout = setTimeout(playRadioSound, (duration * 1000) - 100);
+                            }
+                        })
+                        .catch(e => {
+                            console.log("Audio play failed:", e);
+                            // Try again after a delay
+                            if (glitchEnabled) {
+                                radioLoopTimeout = setTimeout(playRadioSound, 2000);
+                            }
+                        });
+                }
+                
+                playRadioSound();
+            }
+
+            // Function to stop radio sound
+            function stopRadioLoop() {
+                radioPlaying = false;
+                if (radioLoopTimeout) {
+                    clearTimeout(radioLoopTimeout);
+                    radioLoopTimeout = null;
+                }
+                attempt10Sound.pause();
+                attempt10Sound.currentTime = 0;
+            }
+            
+            // Play appropriate attempt sound based on count
+            function playAttemptSound() {
+                if (!hasUserInteracted) return; // Skip if no user interaction yet
+                
+                if (totalAttempts >= 20 && lastAttemptSoundPlayed < 20) {
+                    attempt20Sound.currentTime = 0;
+                    attempt20Sound.play().catch(e => console.log("Audio play failed:", e));
+                    lastAttemptSoundPlayed = 20;
+                    flashScreen('rgba(255, 0, 0, 0.4)');
+                    console.log("Playing attempt sound for 20+ attempts");
+                } else if (totalAttempts >= 10 && lastAttemptSoundPlayed < 10) {
+                    // Start the glitch effect at 10+ attempts
+                    startGlitchEffect();
+                    flashScreen('rgba(255, 0, 0, 0.25)');
+                    console.log("Playing attempt sound for 10+ attempts and starting glitch effect");
+                    lastAttemptSoundPlayed = 10;
+                } else if (totalAttempts >= 5 && lastAttemptSoundPlayed < 5) {
+                    attempt5Sound.currentTime = 0;
+                    attempt5Sound.play().catch(e => console.log("Audio play failed:", e));
+                    lastAttemptSoundPlayed = 5;
+                    flashScreen('rgba(255, 0, 0, 0.15)');
+                    console.log("Playing attempt sound for 5+ attempts");
+                }
+            }
+            
+            // Flash the screen with the given color
+            function flashScreen(color) {
+                screenFlash.style.backgroundColor = color;
+                screenFlash.classList.add('active');
+                
+                setTimeout(() => {
+                    screenFlash.classList.remove('active');
+                }, 300);
+            }
+            
+            // Modified addToSequence function to count movements and log attempts
             function addToSequence(direction) {
                 currentSequence.push(direction);
+                movementCounter++;
+                
+                // Check if we've reached a complete attempt (4 movements)
+                if (movementCounter >= 4) {
+                    totalAttempts++;
+                    console.log(`Complete attempt #${totalAttempts}: ${currentSequence.join(', ')}`);
+                    
+                    // Check for playing attempt sounds based on count
+                    playAttemptSound();
+                    
+                    // Reset movement counter
+                    movementCounter = 0;
+                }
+                
+                // Continue with the normal sequence checking
                 checkSequence();
             }
             
             function checkSequence() {
                 if (arraysEqual(currentSequence, correctSequence)) {
+                    console.log("Correct sequence entered!");
                     unlockLock();
                 } else if (currentSequence.length >= correctSequence.length) {
+                    console.log(`Wrong sequence: ${currentSequence.join(', ')}. Expected: ${correctSequence.join(', ')}`);
+                    console.log(`Failed attempt #${totalAttempts}`);
                     // Reset if sequence is wrong and has enough entries
                     resetSequence();
                 }
@@ -580,17 +1074,17 @@
                 return arr1.length === arr2.length && arr1.every((value, index) => value === arr2[index]);
             }
             
-            function resetSequence() {
-                currentSequence = [];
-            }
-            
             function playLockSound(intensity = 1) {
-                if (!lockSoundPlaying) {
+                if (!lockSoundPlaying && hasUserInteracted) {
                     lockSoundPlaying = true;
                     lockSound.currentTime = 0;
-                    lockSound.volume = 0.7 + (intensity * 0.8); // Louder based on movement
+                    // Fixed: ensure volume never exceeds 1.0
+                    lockSound.volume = Math.min(0.7 + (intensity * 0.3), 1.0); 
                     lockSound.playbackRate = 1.5 + (intensity * 0.5); // Quicker based on movement
-                    lockSound.play().catch(e => console.log("Audio play failed:", e));
+                    lockSound.play().catch(e => {
+                        console.log("Audio play failed:", e);
+                        lockSoundPlaying = false;
+                    });
                 }
             }
             
@@ -601,22 +1095,46 @@
             }
             
             function unlockLock() {
-                unlockSound.play().catch(e => console.log("Audio play failed:", e));
+                // Stop glitch effect if active
+                stopGlitchEffect();
+                
+                // Reset counter for next time
+                totalAttempts = 0;
+                movementCounter = 0;
+                lastAttemptSoundPlayed = 0;
+                
+                // Play unlock sound if possible
+                if (hasUserInteracted) {
+                    unlockSound.play().catch(e => console.log("Audio play failed:", e));
+                }
+                
                 lockContainer.style.opacity = '0';
                 setTimeout(() => {
                     lockContainer.style.display = 'none';
                     keyCodeContainer.style.display = 'flex';
                     setTimeout(() => {
                         keyCodeContainer.style.opacity = '1';
-                        backgroundMusic.volume = 0.8; // Volume set to 80%
-                        backgroundMusic.play().catch(e => console.log("Audio play failed:", e));
-                        debug("Key code container shown");
+                        
+                        // Only try to play background music if we've had user interaction
+                        if (hasUserInteracted) {
+                            backgroundMusic.volume = 0.8;
+                            backgroundMusic.play().catch(e => console.log("Audio play failed:", e));
+                        }
+                        console.log("Lock unlocked! Key code container shown");
                     }, 100);
                 }, 2000);
+            }
+
+            function resetSequence() {
+                currentSequence = [];
+                movementCounter = 0;
+                console.log("Sequence reset");
             }
             
             // Start the light flickering sound effect loop
             function startFlickeringSound() {
+                if (!hasUserInteracted) return;
+                
                 // Make sure the sound is at beginning and play it
                 lightPullSound.currentTime = 0;
                 lightPullSound.loop = true;
@@ -633,6 +1151,7 @@
             function toggleLightBulb() {
                 if (isAnimating) return; // Prevent multiple rapid clicks
                 
+                markUserInteraction(); // Mark user interaction
                 isAnimating = true;
                 
                 // If light is currently off and we're turning it on
@@ -693,7 +1212,7 @@
                 isBulbOn = !isBulbOn;
                 bulbToggleCount++;
                 
-                debug(`Bulb toggled: ${isBulbOn ? 'ON' : 'OFF'}, Count: ${bulbToggleCount}`);
+                console.log(`Bulb toggled: ${isBulbOn ? 'ON' : 'OFF'}, Count: ${bulbToggleCount}`);
                 
                 // Reset animation flag after a short delay
                 setTimeout(() => {
@@ -707,6 +1226,7 @@
                     // Start with maximum blur (level 1)
                     digit.classList.add('visible', 'blur-level-1');
                     revealedDigits++;
+                    console.log(`Digit ${revealedDigits} revealed`);
                 }
             }
             
@@ -714,7 +1234,7 @@
                 // Increase blur level each time the light is toggled on (after all digits are revealed)
                 if (blurLevel < 6) {
                     blurLevel++;
-                    debug(`Improving clarity: blur level ${blurLevel}`);
+                    console.log(`Improving clarity: blur level ${blurLevel}`);
                     
                     // Update all revealed digits to new blur level
                     for (let i = 0; i < revealedDigits; i++) {
@@ -730,33 +1250,42 @@
             // Set up event listeners
             joystickHandle.addEventListener('mousedown', startDrag);
             joystickHandle.addEventListener('touchstart', startDrag);
-            
+
             document.addEventListener('mousemove', moveJoystick);
             document.addEventListener('touchmove', moveJoystick, { passive: false });
-            
+
             document.addEventListener('mouseup', endDrag);
             document.addEventListener('touchend', endDrag);
-            
-            resetButton.addEventListener('click', resetSequence);
-            
+
+            // Modified to count reset button clicks as attempts
+            resetButton.addEventListener('click', function() {
+                resetSequence();
+                totalAttempts++;
+                markUserInteraction(); // Mark user interaction
+                console.log(`Reset button clicked. Total attempts: ${totalAttempts}`);
+                
+                // Check for attempt sound playing
+                playAttemptSound();
+            });
+
             joystickBase.addEventListener('touchmove', function(e) {
                 e.preventDefault();
             }, { passive: false });
-            
+
             // Add light bulb interaction
             lightBulb.addEventListener('click', toggleLightBulb);
             lightBulb.addEventListener('touchend', function(e) {
                 e.preventDefault();
                 toggleLightBulb();
             });
-            
+
             // Make pull string clickable too
             pullString.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation(); // Prevent double triggering with lightBulb click
                 toggleLightBulb();
             });
-            
+
             // Add direct interaction with the entire container to make it easier to toggle
             keyCodeContainer.addEventListener('click', function(e) {
                 // Only toggle if clicking directly on container (not on already revealed elements)
@@ -764,7 +1293,7 @@
                     toggleLightBulb();
                 }
             });
-            
+
             // Clean up audio when page unloads
             window.addEventListener('beforeunload', function() {
                 if (lightPullSound) {
@@ -774,8 +1303,24 @@
                 if (backgroundMusic) {
                     backgroundMusic.pause();
                 }
+                
+                // Stop any attempt sounds
+                attempt5Sound.pause();
+                attempt10Sound.pause();
+                attempt20Sound.pause();
+                
+                // Stop glitch effects
+                if (glitchInterval) {
+                    clearInterval(glitchInterval);
+                }
+                if (radioLoopTimeout) {
+                    clearTimeout(radioLoopTimeout);
+                }
+                if (extremeGlitchTimeout) {
+                    clearInterval(extremeGlitchTimeout);
+                }
             });
-            
+
             // Debug function to test the code reveal
             if (debugMode) {
                 window.testReveal = function() {
@@ -814,8 +1359,52 @@
                         }, 300);
                     }, 2500);
                 };
+                
+                // Debug function to test attempt sounds
+                window.testAttemptSounds = function() {
+                    console.log("Testing attempt sounds...");
+                    
+                    // Set attempt count to 4 and trigger sound (should play 5+ sound)
+                    totalAttempts = 4;
+                    setTimeout(() => {
+                        totalAttempts++;
+                        playAttemptSound();
+                        
+                        // Set attempt count to 9 and trigger sound (should play 10+ sound)
+                        setTimeout(() => {
+                            totalAttempts = 9;
+                            setTimeout(() => {
+                                totalAttempts++;
+                                playAttemptSound();
+                                
+                                // Set attempt count to 19 and trigger sound (should play 20+ sound)
+                                setTimeout(() => {
+                                    totalAttempts = 19;
+                                    setTimeout(() => {
+                                        totalAttempts++;
+                                        playAttemptSound();
+                                    }, 1000);
+                                }, 2000);
+                            }, 1000);
+                        }, 2000);
+                    }, 1000);
+                };
+                
+                // Debug function to test glitch effects
+                window.testGlitchEffect = function() {
+                    if (glitchEnabled) {
+                        stopGlitchEffect();
+                    } else {
+                        startGlitchEffect();
+                    }
+                };
+                
+                // Debug function to test extreme glitch
+                window.testExtremeGlitch = function() {
+                    triggerExtremeGlitch();
+                };
             }
-        });
-    </script>
+            });
+            </script>
 </body>
 </html>
